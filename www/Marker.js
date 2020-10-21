@@ -25,7 +25,7 @@ var Marker = function(map, markerOptions, _exec, extras) {
   // Sets event listeners
   //-----------------------------------------------
   self.on(event.MARKER_CLICK, function() {
-    self.showInfoWindow.apply(self);
+    //self.showInfoWindow.apply(self); //-> disabling info show for project specific purpose - use InfoWindow function instead to show/hide
   });
 
   self.on('position_changed', function() {
@@ -268,12 +268,39 @@ Marker.prototype.setFlat = function(flat) {
   this.set('flat', flat);
   return this;
 };
-Marker.prototype.setIcon = function(url) {
-  if (url && common.isHTMLColorString(url)) {
-    url = common.HTMLColor2RGBA(url);
-  }
-  this.set('icon', url);
-  return this;
+Marker.prototype.setIcon = function(iconConfig) {
+  
+  var icon = iconConfig.icon;
+  
+    var link;
+    if (typeof icon === 'string') {
+      if (icon.indexOf('://') === -1 &&
+          icon.indexOf('.') === 0) {
+
+        link = document.createElement('a');
+        link.href = icon;
+        icon = link.protocol+'//'+link.host+link.pathname + link.search;
+        link = undefined;
+      }
+    } else if (typeof icon === 'object' && typeof icon.url === 'string') {
+      if (icon.url.indexOf('://') === -1 &&
+          icon.url.indexOf('.') === 0) {
+
+        link = document.createElement('a');
+        link.href = icon.url;
+        icon.url = link.protocol+'//'+link.host+link.pathname + link.search;
+        link = undefined;
+      }
+    }
+
+    if (typeof icon === 'object' &&
+        typeof icon.anchor === 'object' &&
+        'x' in icon.anchor &&
+        'y' in icon.anchor) {
+      icon.anchor = [icon.anchor.x, icon.anchor.y];
+    }
+
+    self.exec.call(self, null, self.errorHandler, self.getPluginName(), 'setIcon', [self.getId(), icon]);
 };
 Marker.prototype.setTitle = function(title) {
   if (!title) {
