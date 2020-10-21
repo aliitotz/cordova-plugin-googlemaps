@@ -1331,6 +1331,7 @@ Map.prototype.addCircle = function(circleOptions, callback) {
 
 Map.prototype.addMarker = function(markerOptions, callback) {
   var self = this;
+  alert("Initiating marker add");
   markerOptions = common.markerOptionsFilter(markerOptions);
 
   //------------------------------------
