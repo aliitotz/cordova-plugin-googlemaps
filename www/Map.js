@@ -1339,6 +1339,7 @@ Map.prototype.addMarker = function(markerOptions, callback) {
   markerOptions.icon = markerOptions.icon || {};
   var link;
   if (typeof markerOptions.icon === 'string') {
+    alert("Icon is string");
     if (markerOptions.icon.indexOf('://') === -1 &&
         markerOptions.icon.indexOf('.') === 0) {
 
@@ -1346,8 +1347,10 @@ Map.prototype.addMarker = function(markerOptions, callback) {
       link.href = markerOptions.icon;
       markerOptions.icon = link.protocol+'//'+link.host+link.pathname + link.search;
       link = undefined;
+      alert("Icon is set: " + markerOptions.icon);
     }
   } else if (typeof markerOptions.icon === 'object' && typeof markerOptions.icon.url === 'string') {
+    alert("Icon is object");
     if (markerOptions.icon.url.indexOf('://') === -1 &&
         markerOptions.icon.url.indexOf('.') === 0) {
 
@@ -1355,7 +1358,10 @@ Map.prototype.addMarker = function(markerOptions, callback) {
       link.href = markerOptions.icon.url;
       markerOptions.icon.url = link.protocol+'//'+link.host+link.pathname + link.search;
       link = undefined;
+      alert("Icon.url is set: " + markerOptions.icon.url);
     }
+  }else{
+    alert("Icon is not set");
   }
 
   var marker = new Marker(self, markerOptions, exec);
